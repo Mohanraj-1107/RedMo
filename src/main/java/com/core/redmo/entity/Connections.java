@@ -1,8 +1,13 @@
 //$Id$
 package com.core.redmo.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,7 +22,7 @@ public class Connections {
 	@Column(name="connection_id")
 	private Long connectionId;
 	
-	@Column(name="connection_name")
+	@Column(name="connection_name",unique=true)
 	private String connectionName;
 	
 	@Column(name="host")
@@ -30,7 +35,20 @@ public class Connections {
 	private String redisUserName;
 	
 	@Column(name="redis_password")
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String redisPassword;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="connection_status")
+	private ConnectionStatus connectionStatus=ConnectionStatus.DOWN;
+	
+	@CreationTimestamp
+	@Column(name="created_on",updatable=false)
+	private Long createdOn;
+	
+	@UpdateTimestamp
+	@Column(name="modified_on")
+	private Long modifiedOn;
 	
 	public Long getConnectionId() {
 		return connectionId;
@@ -78,6 +96,30 @@ public class Connections {
 
 	public void setRedisPassword(String redisPassword) {
 		this.redisPassword = redisPassword;
+	}
+	
+	public Long getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(Long createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Long getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Long modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+	
+	public ConnectionStatus getConnectionStatus() {
+		return connectionStatus;
+	}
+
+	public void setConnectionStatus(ConnectionStatus connectionStatus) {
+		this.connectionStatus = connectionStatus;
 	}
 		
 }
